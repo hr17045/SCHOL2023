@@ -20,7 +20,7 @@ The project will be divided into the following phases:
 
 **5. Implementation:** Implement the developed app as a software tool that can be used by teachers at Sacred Heart College to optimise teaching abilities by staying on top of their tasks and having better communication with colleagues.
 
-**Expected outcomes: **
+**Expected outcomes:**
 The expected outcomes of this project are: 
 
 * An efficient app for optimising teaching abilities by staying on top of their tasks and having better communication with colleagues.
