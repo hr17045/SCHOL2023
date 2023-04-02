@@ -1,3 +1,7 @@
-# This is a test to link my github with Github Desktop asnd VS Code!
+from flask import Flask
 
-print("success")
+app = Flask(__name__)
+
+@app.route('/')
+def hello():
+    return 'Hello, World!'
