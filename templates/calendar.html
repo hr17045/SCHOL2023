@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Calendar</title>
+    <style>
+      table {
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>{{ month }} {{ year }}</h1>
+    <table>
+      <tr>
+        <th>Mon</th>
+        <th>Tue</th>
+        <th>Wed</th>
+        <th>Thu</th>
+        <th>Fri</th>
+        <th>Sat</th>
+        <th>Sun</th>
+      </tr>
+      {% for week in cal %}
+        <tr>
+          {% for day in week %}
+            {% if day == 0 %}
+              <td></td>
+            {% else %}
+              <td>{{ day }}</td>
+            {% endif %}
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </table>
+  </body>
+</html> 

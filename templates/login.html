@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <style>
+        /* Styling for the page */
+        body {
+            background-color: #f2f2f2;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            text-align: center;
+            color: #333333;
+        }
+        form {
+            margin: auto;
+            width: 50%;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px #cccccc;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333333;
+        }
+        input[type=text], input[type=password], select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        input[type=submit] {
+            background-color: #4CAF50;
+            color: #ffffff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        input[type=submit]:hover {
+            background-color: #3e8e41;
+        }
+    </style>
+</head>
+<body>
+    <h1>Login</h1>
+    <form method="post" action="{{ url_for('login') }}">
+        <!-- Username input field -->
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username">
+        <!-- Password input field -->
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password">
+        <!-- Department selection field -->
+        <label for="department">Department:</label>
+        <select id="department" name="department">
+            <option value="art">Art</option>
+            <option value="commerce">Commerce</option>
+            <option value="english">English</option>
+            <option value="mathematics">Mathematics</option>
+            <option value="music">Music</option>
+            <option value="science">Science</option>
+        </select>
+        <!-- Login button  -->
+        <input type="submit" value="Login" >
+    </form>
+    
+    <!-- SweetAlert2 library for displaying error messages -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.4/dist/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.4/dist/sweetalert2.min.css">
+
+    <script>
+        // Function to validate form inputs
+        function validateForm() {
+            var password = document.getElementById("password").value;
+            // Check password length
+            if (password.length < 8) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Password must be at least 8 characters long',
+                });
+                return false;
+            }
+            // Check for at least one digit in password
+            if (!/\d/.test(password)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Password must contain at least one digit',
+                });
+                return false;
+            }
+            // Check for at least one uppercase letter in password
+
+        return true;
+    }
+
+    var form = document.querySelector("form");
+    form.addEventListener("submit", function(event) {
+        if (!validateForm()) {
+            event.preventDefault();
+        }
+    });
+</script>
+
+</body>
+</html>
