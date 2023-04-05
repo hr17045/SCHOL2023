@@ -24,7 +24,7 @@ def login():
         user = User.query.filter_by(email=email, password=password, department=department).first()
 
         if user:
-            return 'Login successful!'
+            return render_template('calendar.html')
         else:
             return 'Invalid email or password'
     
