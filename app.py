@@ -1,8 +1,8 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 import calendar, datetime
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:/Users/Harvey/Desktop/SCHOL2023/instance/user.db'
 
 db = SQLAlchemy(app)
@@ -24,7 +24,7 @@ def login():
         user = User.query.filter_by(email=email, password=password, department=department).first()
 
         if user:
-            return render_template('calendar.html')
+            return redirect('/')
         else:
             return 'Invalid email or password'
     
