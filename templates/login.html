@@ -5,7 +5,7 @@
     <style>
         /* Styling for the page */
         body {
-            background-image: url('/static/login.jpg');
+            background-image: url('/static/shclogo.jpg');
             background-repeat: no-repeat;
             background-size: cover;
             font-family: Arial, sans-serif;
@@ -21,6 +21,7 @@
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0px 0px 10px #cccccc;
+            opacity: 0.8;
         }
         label {
             display: block;
@@ -48,6 +49,13 @@
         input[type=submit]:hover {
             background-color: #3e8e41;
         }
+        /* Highlight input boxes on focus */
+        input[type=text]:focus, input[type=password]:focus, select:focus {
+            border-color: #4CAF50;
+            box-shadow: 0px 0px 10px #4CAF50;
+            opacity: 1;
+        }
+    </style>
     </style>
 </head>
 <body>
@@ -59,16 +67,6 @@
         <!-- Password input field -->
         <label for="password">Password:</label>
         <input type="password" id="password" name="password">
-        <!-- Department selection field -->
-        <label for="department">Department:</label>
-        <select id="department" name="department">
-            <option value="art">Art</option>
-            <option value="commerce">Commerce</option>
-            <option value="english">English</option>
-            <option value="mathematics">Mathematics</option>
-            <option value="music">Music</option>
-            <option value="science">Science</option>
-        </select>
         <!-- Login button  -->
         <input type="submit" value="Login" >
     </form>
@@ -102,6 +100,13 @@
             // Check for at least one uppercase letter in password
 
         return true;
+    }
+          // Remove opacity on focus
+            var inputs = document.querySelectorAll("input[type=text], input[type=password], select");
+            for (var i = 0; i < inputs.length; i++) {
+                inputs[i].addEventListener("focus", function() {
+                    this.style.opacity = "1";
+                });
     }
 
     var form = document.querySelector("form");
