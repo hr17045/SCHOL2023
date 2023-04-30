@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 import calendar, datetime
+import hashlib
 
 app = Flask(__name__, static_url_path='/static')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///C:/Users/Harvey/Desktop/SCHOL2023/instance/user.db'
@@ -18,10 +19,11 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        department = request.form['department']
+        #hashing passwords
+        password_h = hashlib.sha256(password.encode('utf-8')).hexdigest()
         
         # Query the database for the submitted username and password
-        user = User.query.filter_by(email=email, password=password, department=department).first()
+        user = User.query.filter_by(email=email, password=password_h).first()
 
         if user:
             return redirect('/')
@@ -36,14 +38,16 @@ def signup():
         email = request.form['email']
         password = request.form['password']
         department = request.form['department']
+       #hashing passwords
+        password_h = hashlib.sha256(password.encode('utf-8')).hexdigest()
 
         # Create a new user object and add it to the database
-        new_user = User(email=email, password=password, department=department)
+        new_user = User(email=email, password=password_h, department=department)
         db.session.add(new_user)
         db.session.commit()
 
         # Display a success message
-        return 'Sign up successful!'
+        return redirect('/') 
 
     return render_template('signup.html')
 
