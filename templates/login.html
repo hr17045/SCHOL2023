@@ -6,9 +6,10 @@
         /* Styling for the page */
         body {
             background-image: url('/static/shclogo.jpg');
-            background-repeat: no-repeat;
             background-size: cover;
             font-family: Arial, sans-serif;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
         }
         h1 {
             text-align: center;
@@ -55,6 +56,20 @@
             box-shadow: 0px 0px 10px #4CAF50;
             opacity: 1;
         }
+    
+        a.signup-link {
+            display: block;
+            text-align: left;
+            font-size: 14px;
+            color: #666666;
+            margin-top: 10px;
+            text-decoration: none;
+            
+        }
+
+        a.signup-link:hover {
+            color: #4CAF50;
+        }
     </style>
     </style>
 </head>
@@ -69,7 +84,10 @@
         <input type="password" id="password" name="password">
         <!-- Login button  -->
         <input type="submit" value="Login" >
+         <!-- signup button -->
+        <a href="{{ url_for('signup') }}" class = "signup-link">Create an account</a>
     </form>
+   
     
     <!-- SweetAlert2 library for displaying error messages -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.4/dist/sweetalert2.min.js"></script>

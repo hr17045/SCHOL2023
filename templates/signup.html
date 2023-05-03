@@ -8,6 +8,8 @@
             background-image: url("/static/shclogo.jpg");
             font-size: Arial, sans-serif;
             background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
         }
         h1 {
             text-align: center;
@@ -55,6 +57,19 @@
             box-shadow: 0px 0px 10px #4CAF50;
             opacity: 1;
         }
+        a.login-link {
+            display: block;
+            text-align: left;
+            font-size: 14px;
+            color: #666666;
+            margin-top: 10px;
+            text-decoration: none;
+            
+        }
+
+        a.login-link:hover {
+            color: #4CAF50;
+        }
     </style>
 </head>
 <body>
@@ -81,6 +96,8 @@
         </select>
         <!-- Sign Up button  -->
         <input type="submit" value="Sign Up" >
+        <!-- Login button -->
+        <a href="{{ url_for('login') }}" class = "login-link">Already have an account? Log in</a>
     
     </form>
     <!-- SweetAlert2 library for displaying error messages -->
