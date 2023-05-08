@@ -1,36 +1,29 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Calendar</title>
-    <style>
-      table {
-        margin: 0 auto;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>{{ month }} {{ year }}</h1>
-    <table>
-      <tr>
-        <th>Mon</th>
-        <th>Tue</th>
-        <th>Wed</th>
-        <th>Thu</th>
-        <th>Fri</th>
-        <th>Sat</th>
-        <th>Sun</th>
-      </tr>
-      {% for week in cal %}
-        <tr>
-          {% for day in week %}
-            {% if day == 0 %}
-              <td></td>
-            {% else %}
-              <td>{{ day }}</td>
-            {% endif %}
-          {% endfor %}
-        </tr>
-      {% endfor %}
-    </table>
-  </body>
-</html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.4.0/main.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.4.0/main.min.js"></script>
+    
+</head>
+<body>
+    <div id="calendar"></div>
+    <script>
+        let events = {{ events | tojson }};
+        let calendarEl = document.getElementById('calendar');
+
+        let calendar = new FullCalendar.Calendar(calendarEl, {
+            events : events.map(event => ({
+                title : event.todo,
+                start : event.date, 
+            }))
+        });
+
+        calendar.render();
+    </script>
+</body>
+</html>
