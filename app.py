@@ -14,10 +14,6 @@ class User(db.Model):
     password = db.Column(db.String(120), nullable=False)
     department = db.Column(db.String(120), nullable=False)
 
-from flask import Flask, render_template
-
-app = Flask(__name__)
-
 events = [
     {
         'todo' : 'Tutorial for Alex',
@@ -32,9 +28,6 @@ events = [
 @app.route("/")
 def calendar():
     return render_template('calendar.html', events = events)
-
-if __name__ == "__main__":
-    app.run(debug=True)
 
 
 @app.route('/login', methods=['GET', 'POST'])

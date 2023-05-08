@@ -107,29 +107,54 @@
     <script>
         // Function to validate form inputs
         function validateForm() {
-            var password = document.getElementById("password").value;
-            // Check password length
-            if (password.length < 8) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Password must be at least 8 characters long',
-                });
-                return false;
-            }
-            // Check for at least one digit in password
-            if (!/\d/.test(password)) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Password must contain at least one digit',
-                });
-                return false;
-            }
-            // Check for at least one uppercase letter in password
+    var email = document.getElementById("email").value;
+    var password = document.getElementById("password").value;
+    var confirm_password = document.getElementById("confirm_password").value;
 
-        return true;
+    // Check for a valid email format
+    if (!/\S+@\S+\.\S+/.test(email)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Please enter a valid email address',
+        });
+        return false;
     }
+
+    // Check for matching passwords
+    if (password !== confirm_password) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Passwords do not match',
+        });
+        return false;
+    }
+
+    // Check password length
+    if (password.length < 8) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Password must be at least 8 characters long',
+        });
+        return false;
+    }
+
+    // Check for at least one digit in password
+    if (!/\d/.test(password)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Password must contain at least one digit',
+        });
+        return false;
+    }
+
+    // All validations passed, allow form submission
+    return true;
+}
+
           // Remove opacity on focus
             var inputs = document.querySelectorAll("input[type=text], input[type=password], select");
             for (var i = 0; i < inputs.length; i++) {
