@@ -17,10 +17,32 @@
         let calendarEl = document.getElementById('calendar');
 
         let calendar = new FullCalendar.Calendar(calendarEl, {
-            events : events.map(event => ({
-                title : event.todo,
-                start : event.date, 
-            }))
+            headerToolbar: {
+                start: 'prev,next today',
+                center: 'title',
+                end: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            events: events.map(event => ({
+                title: event.todo,
+                start: event.date
+            })),
+            customButtons: {
+                addEventButton: {
+                    text: 'Add Event',
+                    click: function() {
+                        calendar.addEvent({
+                            title: 'New Event',
+                            start: new Date(),
+                            allDay: true
+                        });
+                    }
+                }
+            },
+            headerToolbar: {
+                left: 'prev,next today addEventButton',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            }
         });
 
         calendar.render();
