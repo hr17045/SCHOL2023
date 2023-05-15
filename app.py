@@ -14,6 +14,7 @@ class User(db.Model):
     password = db.Column(db.String(120), nullable=False)
     department = db.Column(db.String(120), nullable=False)
 
+
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120), nullable=False)
@@ -43,6 +44,60 @@ def add_task():
     db.session.add(new_task)
     db.session.commit()
     return redirect('/')
+=======
+events = [
+    {
+        'todo' : 'Tutorial for Alex',
+        'date' : '2023-05-08', 
+    },
+    {
+        'todo' : 'Eat Tuckshop',
+        'date' : '2023-05-09',
+    }
+]
+
+@app.route("/")
+def calendar():
+    return render_template('calendar.html', events = events)
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        #hashing passwords
+        password_h = hashlib.sha256(password.encode('utf-8')).hexdigest()
+        
+        # Query the database for the submitted username and password
+        user = User.query.filter_by(email=email, password=password_h).first()
+
+        if user:
+            return redirect('/')
+        else:
+            return 'Invalid email or password'
+    
+    return render_template('login.html')
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        department = request.form['department']
+       #hashing passwords
+        password_h = hashlib.sha256(password.encode('utf-8')).hexdigest()
+
+        # Create a new user object and add it to the database
+        new_user = User(email=email, password=password_h, department=department)
+        db.session.add(new_user)
+        db.session.commit()
+
+        # Display a success message
+        return redirect('/') 
+
+    return render_template('signup.html')
+
 
 if __name__ == "__main__":
     app.run(debug=True)
