@@ -8,23 +8,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.4.0/main.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.4.0/main.min.js"></script>
+    
 </head>
 <body>
     <div id="calendar"></div>
-
-    <div id="addTaskModal" style="display: none;">
-        <h2>Add Task</h2>
-        <form id="addTaskForm" action="/add_task" method="post">
-            <label for="title">Title:</label>
-            <input type="text" name="title" id="title" required>
-            <label for="start_date">Start Date:</label>
-            <input type="date" name="start_date" id="start_date" required>
-            <label for="end_date">End Date:</label>
-            <input type="date" name="end_date" id="end_date" required>
-            <button type="submit">Add Task</button>
-        </form>
-    </div>
-
     <script>
         let events = {{ events | tojson }};
         let calendarEl = document.getElementById('calendar');
@@ -35,17 +22,24 @@
                 center: 'title',
                 end: 'dayGridMonth,timeGridWeek,timeGridDay'
             },
-            events: events,
+            events: events.map(event => ({
+                title: event.todo,
+                start: event.date
+            })),
             customButtons: {
-                addTaskButton: {
-                    text: 'Add Task',
+                addEventButton: {
+                    text: 'Add Event',
                     click: function() {
-                        document.getElementById('addTaskModal').style.display = 'block';
+                        calendar.addEvent({
+                            title: 'New Event',
+                            start: new Date(),
+                            allDay: true
+                        });
                     }
                 }
             },
             headerToolbar: {
-                left: 'prev,next today addTaskButton',
+                left: 'prev,next today addEventButton',
                 center: 'title',
                 right: 'dayGridMonth,timeGridWeek,timeGridDay'
             }
