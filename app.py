@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+import hashlib
 
 app = Flask(__name__, static_url_path='/static')
 
@@ -44,7 +45,7 @@ def add_task():
     db.session.add(new_task)
     db.session.commit()
     return redirect('/')
-=======
+
 events = [
     {
         'todo' : 'Tutorial for Alex',
