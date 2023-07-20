@@ -71,6 +71,17 @@
             font-size: 16px;
         }
 
+        /* Styling for the department dropdown */
+        #addTaskModal form select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #555;
+        }
+
         /* Styling for the "Add Task" button in the add task form */
         #addTaskModal form button[type="submit"] {
             padding: 8px 16px;
@@ -87,7 +98,15 @@
             background-color: #45a049;
         }
 
-        /* Styling for the Logout button in the header toolbar */
+        /* ... (existing styles) ... */
+
+        /* Styling for the badge image in the top left corner */
+        #badgeImage {
+            width: 50px; /* Adjust the size of the badge image as needed */
+            height: auto;
+        }
+
+        /* Restyle the Logout button */
         #header-toolbar {
             position: relative;
             z-index: 1;
@@ -108,6 +127,7 @@
             font-size: 16px;
             text-decoration: none;
             margin-right: 10px;
+            cursor: pointer;
         }
 
         /* Styling for the Logout button on hover */
@@ -115,35 +135,9 @@
             background-color: #45a049;
         }
 
-        /* Styling for the calendar container */
-        #calendar {
-            margin-top: 20px;
-        }
-
-        /* CSS for the very faded image background */
-        /* Set the background color without transparency */
-        body {
-            background-color: #fff;
-            margin: 0;
-            padding: 0;
-        }
-
-        /* Styling for the badge and content container */
-        #badgeAndContentContainer {
-            position: relative;
-        }
-
-        /* Styling for the badge container */
-        #badgeContainer {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-        }
-
-        /* Styling for the badge image */
-        #badgeImage {
-            width: 50px; /* Adjust the size of the badge image as needed */
-            height: auto;
+        /* Styling for the department filter dropdown */
+        #departmentFilter {
+            margin-bottom: 20px;
         }
 
     </style>
@@ -164,6 +158,20 @@
             <a href="/logout" id="logoutButton">Logout</a>
         </div>
 
+        <!-- Department filter dropdown -->
+        <div id="departmentFilter">
+            <label for="department">Select Department:</label>
+            <select name="department" id="department">
+                <option value="all">All Departments</option>
+                <option value="art">Art</option>
+                <option value="commerce">Commerce</option>
+                <option value="english">English</option>
+                <option value="mathematics">Mathematics</option>
+                <option value="music">Music</option>
+                <option value="science">Science</option>
+            </select>
+        </div>
+
         <!-- Calendar container -->
         <div id="calendar"></div>
 
@@ -181,6 +189,15 @@
                 <input type="date" name="start_date" id="start_date" required>
                 <label for="end_date">End Date:</label>
                 <input type="date" name="end_date" id="end_date" required>
+                <label for="department">Department:</label>
+                <select name="department" id="department">
+                    <option value="art">Art</option>
+                    <option value="commerce">Commerce</option>
+                    <option value="english">English</option>
+                    <option value="mathematics">Mathematics</option>
+                    <option value="music">Music</option>
+                    <option value="science">Science</option>
+                </select>
                 <button type="submit">Add Task</button>
             </form>
         </div>
@@ -194,6 +211,7 @@
         let modalBackdrop = document.getElementById('modalBackdrop');
         let addTaskModal = document.getElementById('addTaskModal');
         let closeButton = document.querySelector('#addTaskModal .closeButton');
+        let departmentFilter = document.getElementById('departmentFilter');
 
         // Create a FullCalendar instance
         let calendar = new FullCalendar.Calendar(calendarEl, {
@@ -240,6 +258,18 @@
             if (event.target === modalBackdrop) {
                 closeModal();
             }
+        });
+
+        // Function to filter tasks by department
+        function filterByDepartment() {
+            const selectedDepartment = document.getElementById('department').value;
+            window.location.href = `/?department=${selectedDepartment}`;
+        }
+
+        // Prevent form submission on department selection
+        departmentFilter.addEventListener('change', function(event) {
+            event.preventDefault();
+            filterByDepartment();
         });
     </script>
 </body>

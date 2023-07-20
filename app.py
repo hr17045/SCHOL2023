@@ -1,10 +1,8 @@
 from flask import Flask, render_template, request, redirect, session
 from flask_sqlalchemy import SQLAlchemy
-import calendar
 from datetime import datetime
 import hashlib
 
-# Create the Flask app and set the secret key for session management
 app = Flask(__name__, static_url_path='/static')
 app.config['SECRET_KEY'] = 'your_secret_key_here'  # Replace 'your_secret_key_here' with a secret key
 
@@ -14,32 +12,33 @@ app.config['SQLALCHEMY_BINDS'] = {
     'task': 'sqlite:///C:/Users/Harvey/Desktop/SCHOL2023/instance/task.db'
 }
 
-# Create the SQLAlchemy instance for database management
 db = SQLAlchemy(app)
 
-# Define the User model to represent user data in the database
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
     department = db.Column(db.String(120), nullable=False)
 
-# Define the Task model to represent task data in the separate 'task' database
 class Task(db.Model):
-    __bind_key__ = 'task'  # Specify the database binding
+    __bind_key__ = 'task'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120), nullable=False)
     start_date = db.Column(db.DateTime, nullable=False)
     end_date = db.Column(db.DateTime, nullable=False)
+    department = db.Column(db.String(120), nullable=False)
 
-# Route for the main calendar page
 @app.route("/")
 def calendar():
-    # Retrieve all tasks from the 'task' database
-    tasks = Task.query.all()
+    selected_department = request.args.get('department', 'all')
+
+    if selected_department == 'all':
+        tasks = Task.query.all()
+    else:
+        tasks = Task.query.filter_by(department=selected_department).all()
+
     events = []
     for task in tasks:
-        # Convert each task to a format suitable for FullCalendar
         event = {
             'title': task.title,
             'start': task.start_date.strftime('%Y-%m-%d'),
@@ -48,22 +47,17 @@ def calendar():
         events.append(event)
     return render_template('calendar.html', events=events)
 
-# Route for adding a new task via a form submission
 @app.route('/add_task', methods=['POST'])
 def add_task():
-    # Retrieve task details from the submitted form data
     title = request.form['title']
     start_date = datetime.strptime(request.form['start_date'], '%Y-%m-%d')
     end_date = datetime.strptime(request.form['end_date'], '%Y-%m-%d')
+    department = request.form['department']
 
-    # Create a new task instance with the provided details
-    new_task = Task(title=title, start_date=start_date, end_date=end_date)
-
-    # Add the new task to the 'task' database and commit the changes
+    new_task = Task(title=title, start_date=start_date, end_date=end_date, department=department)
     db.session.add(new_task)
     db.session.commit()
 
-    # Redirect the user back to the main calendar page
     return redirect('/')
 
 # Route for user login and authentication
