@@ -5,53 +5,242 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <!-- Link to the FullCalendar CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.4.0/main.min.css">
+    <style>
+        /* Styles for the modal */
+        /* Styling for the modal backdrop */
+        #modalBackdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none;
+            z-index: 9999;
+        }
+
+        /* Styling for the add task modal */
+        #addTaskModal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            display: none;
+            z-index: 10000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Styling for the close button in the add task modal */
+        #addTaskModal .closeButton {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            color: #999;
+        }
+
+        /* Styling for the heading in the add task modal */
+        #addTaskModal h2 {
+            margin-top: 0;
+            font-size: 24px;
+            color: #333;
+        }
+
+        /* Styling for labels in the add task form */
+        #addTaskModal form label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 16px;
+            color: #555;
+        }
+
+        /* Styling for input fields in the add task form */
+        #addTaskModal form input[type="text"],
+        #addTaskModal form input[type="date"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        /* Styling for the "Add Task" button in the add task form */
+        #addTaskModal form button[type="submit"] {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* Styling for the "Add Task" button on hover */
+        #addTaskModal form button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        /* Styling for the Logout button in the header toolbar */
+        #header-toolbar {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+            /* Add some padding to the top to prevent the login button from moving up */
+            padding-top: 20px;
+        }
+
+        /* Styling for the Logout button */
+        #logoutButton {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+
+        /* Styling for the Logout button on hover */
+        #logoutButton:hover {
+            background-color: #45a049;
+        }
+
+        /* Styling for the calendar container */
+        #calendar {
+            margin-top: 20px;
+        }
+
+        /* CSS for the very faded image background */
+        /* Set the background color without transparency */
+        body {
+            background-color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Styling for the badge and content container */
+        #badgeAndContentContainer {
+            position: relative;
+        }
+
+        /* Styling for the badge container */
+        #badgeContainer {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+
+        /* Styling for the badge image */
+        #badgeImage {
+            width: 50px; /* Adjust the size of the badge image as needed */
+            height: auto;
+        }
+
+    </style>
+    <!-- Import jQuery and FullCalendar scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.4.0/main.min.js"></script>
 </head>
 <body>
-    <div id="calendar"></div>
+    <!-- Create a container for the badge and the rest of the content -->
+    <div id="badgeAndContentContainer">
+        <!-- Place the badge image here -->
+        <div id="badgeContainer">
+            <img src="{{ url_for('static', filename='SHC emblem.jpg') }}" alt="Badge" id="badgeImage">
+        </div>
 
-    <div id="addTaskModal" style="display: none;">
-        <h2>Add Task</h2>
-        <form id="addTaskForm" action="/add_task" method="post">
-            <label for="title">Title:</label>
-            <input type="text" name="title" id="title" required>
-            <label for="start_date">Start Date:</label>
-            <input type="date" name="start_date" id="start_date" required>
-            <label for="end_date">End Date:</label>
-            <input type="date" name="end_date" id="end_date" required>
-            <button type="submit">Add Task</button>
-        </form>
+        <!-- Header toolbar containing the Logout button -->
+        <div id="header-toolbar">
+            <a href="/logout" id="logoutButton">Logout</a>
+        </div>
+
+        <!-- Calendar container -->
+        <div id="calendar"></div>
+
+        <!-- Modal backdrop -->
+        <div id="modalBackdrop"></div>
+
+        <!-- Add Task Modal -->
+        <div id="addTaskModal">
+            <span class="closeButton">&times;</span>
+            <h2>Add Task</h2>
+            <form id="addTaskForm" action="/add_task" method="post">
+                <label for="title">Title:</label>
+                <input type="text" name="title" id="title" required>
+                <label for="start_date">Start Date:</label>
+                <input type="date" name="start_date" id="start_date" required>
+                <label for="end_date">End Date:</label>
+                <input type="date" name="end_date" id="end_date" required>
+                <button type="submit">Add Task</button>
+            </form>
+        </div>
     </div>
 
     <script>
+        // JavaScript code for FullCalendar functionality
+        // Get the events data from the server
         let events = {{ events | tojson }};
         let calendarEl = document.getElementById('calendar');
+        let modalBackdrop = document.getElementById('modalBackdrop');
+        let addTaskModal = document.getElementById('addTaskModal');
+        let closeButton = document.querySelector('#addTaskModal .closeButton');
 
+        // Create a FullCalendar instance
         let calendar = new FullCalendar.Calendar(calendarEl, {
             headerToolbar: {
-                start: 'prev,next today',
+                start: 'prev,next today addTaskButton',
                 center: 'title',
-                end: 'dayGridMonth,timeGridWeek,timeGridDay'
+                end: 'dayGridMonth,timeGridWeek,timeGridDay', // Align date to the middle
             },
             events: events,
             customButtons: {
                 addTaskButton: {
                     text: 'Add Task',
                     click: function() {
-                        document.getElementById('addTaskModal').style.display = 'block';
+                        // Show the add task modal when the "Add Task" button is clicked
+                        modalBackdrop.style.display = 'block';
+                        addTaskModal.style.display = 'block';
+                        document.body.style.overflow = 'hidden';
                     }
                 }
             },
-            headerToolbar: {
-                left: 'prev,next today addTaskButton',
-                center: 'title',
-                right: 'timeGridDay,timeGridWeek,dayGridMonth'
-            }
+            initialView: 'dayGridMonth',  // Set the initial view of the calendar
         });
 
+        // Render the calendar
         calendar.render();
+
+        // Enable scrolling when the modal is closed
+        function enableBodyScroll() {
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close the modal and enable scrolling
+        function closeModal() {
+            modalBackdrop.style.display = 'none';
+            addTaskModal.style.display = 'none';
+            enableBodyScroll();
+        }
+
+        // Close the modal on clicking the close button
+        closeButton.addEventListener('click', closeModal);
+
+        // Close the modal on clicking anywhere outside the form
+        modalBackdrop.addEventListener('click', function(event) {
+            if (event.target === modalBackdrop) {
+                closeModal();
+            }
+        });
     </script>
 </body>
 </html>

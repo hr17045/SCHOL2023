@@ -4,6 +4,7 @@
     <title>Sign Up</title>
     <style>
         /* Styling for the page */
+        /* Set background image and font style */
         body {
             background-image: url("/static/shclogo.jpg");
             font-size: Arial, sans-serif;
@@ -11,10 +12,12 @@
             background-repeat: no-repeat;
             background-attachment: fixed;
         }
+        /* Center align the heading */
         h1 {
             text-align: center;
             color: #333333;
         }
+        /* Style for the form container */
         form {
             margin: auto;
             width: 50%;
@@ -23,13 +26,14 @@
             border-radius: 5px;
             box-shadow: 0px 0px 10px #cccccc;
             opacity: 0.8;
-            
         }
+        /* Styling for labels */
         label {
             display: block;
             margin-bottom: 10px;
             color: #333333;
         }
+        /* Styling for input fields and select box */
         input[type=text], input[type=password], select {
             width: 100%;
             padding: 12px;
@@ -39,6 +43,7 @@
             margin-bottom: 20px;
             font-size: 16px;
         }
+        /* Styling for the Submit button */
         input[type=submit] {
             background-color: #4CAF50;
             color: #ffffff;
@@ -48,15 +53,17 @@
             cursor: pointer;
             font-size: 16px;
         }
+        /* Styling for the Submit button on hover */
         input[type=submit]:hover {
             background-color: #3e8e41;
         }
-          /* Highlight input boxes on focus */
+        /* Highlight input boxes on focus */
         input[type=text]:focus, input[type=password]:focus, select:focus {
             border-color: #4CAF50;
             box-shadow: 0px 0px 10px #4CAF50;
             opacity: 1;
         }
+        /* Styling for the login link */
         a.login-link {
             display: block;
             text-align: left;
@@ -64,9 +71,8 @@
             color: #666666;
             margin-top: 10px;
             text-decoration: none;
-            
         }
-
+        /* Styling for the login link on hover */
         a.login-link:hover {
             color: #4CAF50;
         }
@@ -74,6 +80,7 @@
 </head>
 <body>
     <h1>Sign Up</h1>
+    <!-- Sign Up form -->
     <form method="post" action="{{ url_for('signup') }}">
         <!-- Username input field -->
         <label for="email">Email:</label>
@@ -87,6 +94,7 @@
         <!-- Department selection field -->
         <label for="department">Department:</label>
         <select id="department" name="department">
+            <!-- Create options for department selection -->
             <option value="art">Art</option>
             <option value="commerce">Commerce</option>
             <option value="english">English</option>
@@ -98,7 +106,6 @@
         <input type="submit" value="Sign Up" >
         <!-- Login button -->
         <a href="{{ url_for('login') }}" class = "login-link">Already have an account? Log in</a>
-    
     </form>
     <!-- SweetAlert2 library for displaying error messages -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.4/dist/sweetalert2.min.js"></script>
@@ -107,66 +114,70 @@
     <script>
         // Function to validate form inputs
         function validateForm() {
-    var email = document.getElementById("email").value;
-    var password = document.getElementById("password").value;
-    var confirm_password = document.getElementById("confirm_password").value;
+            // Get input values
+            var email = document.getElementById("email").value;
+            var password = document.getElementById("password").value;
+            var confirm_password = document.getElementById("confirm_password").value;
 
-    // Check for a valid email format
-    if (!/\S+@\S+\.\S+/.test(email)) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Please enter a valid email address',
-        });
-        return false;
-    }
-
-    // Check for matching passwords
-    if (password !== confirm_password) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Passwords do not match',
-        });
-        return false;
-    }
-
-    // Check password length
-    if (password.length < 8) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Password must be at least 8 characters long',
-        });
-        return false;
-    }
-
-    // Check for at least one digit in password
-    if (!/\d/.test(password)) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Password must contain at least one digit',
-        });
-        return false;
-    }
-
-    // All validations passed, allow form submission
-    return true;
-}
-
-          // Remove opacity on focus
-            var inputs = document.querySelectorAll("input[type=text], input[type=password], select");
-            for (var i = 0; i < inputs.length; i++) {
-                inputs[i].addEventListener("focus", function() {
-                    this.style.opacity = "1";
+            // Check for a valid email format
+            if (!/\S+@\S+\.\S+/.test(email)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please enter a valid email address',
                 });
-    }
+                return false;
+            }
 
-    var form = document.querySelector("form");
-    form.addEventListener("submit", function(event) {
-        if (!validateForm()) {
-            event.preventDefault();
+            // Check for matching passwords
+            if (password !== confirm_password) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Passwords do not match',
+                });
+                return false;
+            }
+
+            // Check password length
+            if (password.length < 8) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Password must be at least 8 characters long',
+                });
+                return false;
+            }
+
+            // Check for at least one digit in password
+            if (!/\d/.test(password)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Password must contain at least one digit',
+                });
+                return false;
+            }
+
+            // All validations passed, allow form submission
+            return true;
         }
-    });
-</script>
+
+        // Remove opacity on focus
+        var inputs = document.querySelectorAll("input[type=text], input[type=password], select");
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i].addEventListener("focus", function() {
+                this.style.opacity = "1";
+            });
+        }
+
+        // Add event listener to the form submission
+        var form = document.querySelector("form");
+        form.addEventListener("submit", function(event) {
+            if (!validateForm()) {
+                event.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>
