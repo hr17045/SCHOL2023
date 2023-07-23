@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import hashlib
+from datetime import timedelta
 
 app = Flask(__name__, static_url_path='/static')
 app.config['SECRET_KEY'] = 'your_secret_key_here'  # Replace 'your_secret_key_here' with a secret key
@@ -42,7 +43,9 @@ def calendar():
         event = {
             'title': task.title,
             'start': task.start_date.strftime('%Y-%m-%d'),
-            'end': task.end_date.strftime('%Y-%m-%d')
+            'end': task.end_date.strftime('%Y-%m-%d'),
+            'id': task.id,
+            'department': task.department  # Add the department information to the event
         }
         events.append(event)
     return render_template('calendar.html', events=events)
@@ -59,6 +62,25 @@ def add_task():
     db.session.commit()
 
     return redirect('/')
+
+@app.route('/update_task_dates', methods=['POST'])
+def update_task_dates():
+    task_id = request.form['id']
+    new_start = datetime.strptime(request.form['start'], '%Y-%m-%d')
+    new_end = datetime.strptime(request.form['end'], '%Y-%m-%d')
+
+    # Adjust the new_start and new_end dates by adding one day
+    new_start += timedelta(days=1)
+    new_end += timedelta(days=1)
+
+    task = Task.query.get(task_id)
+    if task:
+        # Update the task's start_date and end_date with the adjusted datetime objects
+        task.start_date = new_start
+        task.end_date = new_end
+        db.session.commit()
+
+    return 'Success'
 
 # Route for user login and authentication
 @app.route('/login', methods=['GET', 'POST'])
@@ -109,6 +131,8 @@ def logout():
     session.pop('user_id', None)
 
     return redirect('/login')  # Redirect the user back to the login page
+
+
 
 # Start the Flask application in debug mode if this script is run as the main module
 if __name__ == "__main__":

@@ -80,6 +80,21 @@
             border-radius: 4px;
             font-size: 16px;
             color: #555;
+            background-color: #fff;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        /* Styling for the arrow icon in the dropdown */
+        #addTaskModal form select::after {
+            content: "\25BC"; /* Unicode character for down arrow */
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            transform: translateY(-50%);
+            font-size: 14px;
+            color: #555;
         }
 
         /* Styling for the "Add Task" button in the add task form */
@@ -140,6 +155,38 @@
             margin-bottom: 20px;
         }
 
+        /* Styling for the "Select Department" dropdown */
+        .styled-select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #555;
+            background-color: #fff;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        /* Styling for the arrow icon in the dropdown */
+        .styled-select::after {
+            content: "\25BC"; /* Unicode character for down arrow */
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            transform: translateY(-50%);
+            font-size: 14px;
+            color: #555;
+        }
+
+        /* Styling for the "Select Department" dropdown on focus */
+        .styled-select:focus {
+            outline: none;
+            border-color: #4CAF50; /* Change color on focus if needed */
+        }
+
     </style>
     <!-- Import jQuery and FullCalendar scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -161,14 +208,15 @@
         <!-- Department filter dropdown -->
         <div id="departmentFilter">
             <label for="department">Select Department:</label>
-            <select name="department" id="department">
-                <option value="all">All Departments</option>
-                <option value="art">Art</option>
-                <option value="commerce">Commerce</option>
-                <option value="english">English</option>
-                <option value="mathematics">Mathematics</option>
-                <option value="music">Music</option>
-                <option value="science">Science</option>
+            <select name="department" id="department" class="styled-select">
+                <option value="" selected>Select Department</option>
+                <option value="all" {% if selected_department == 'all' %} selected {% endif %}>All Departments</option>
+                <option value="art" {% if selected_department == 'art' %} selected {% endif %}>Art</option>
+                <option value="commerce" {% if selected_department == 'commerce' %} selected {% endif %}>Commerce</option>
+                <option value="english" {% if selected_department == 'english' %} selected {% endif %}>English</option>
+                <option value="mathematics" {% if selected_department == 'mathematics' %} selected {% endif %}>Mathematics</option>
+                <option value="music" {% if selected_department == 'music' %} selected {% endif %}>Music</option>
+                <option value="science" {% if selected_department == 'science' %} selected {% endif %}>Science</option>
             </select>
         </div>
 
@@ -213,6 +261,26 @@
         let closeButton = document.querySelector('#addTaskModal .closeButton');
         let departmentFilter = document.getElementById('departmentFilter');
 
+        // Function to get the color based on department
+        function getDepartmentColor(department) {
+            switch (department.toLowerCase()) {
+                case 'art':
+                    return 'red';
+                case 'commerce':
+                    return 'green';
+                case 'english':
+                    return 'blue';
+                case 'mathematics':
+                    return 'purple';
+                case 'music':
+                    return 'orange';
+                case 'science':
+                    return 'teal';
+                default:
+                    return 'gray';
+            }
+        }
+
         // Create a FullCalendar instance
         let calendar = new FullCalendar.Calendar(calendarEl, {
             headerToolbar: {
@@ -220,7 +288,12 @@
                 center: 'title',
                 end: 'dayGridMonth,timeGridWeek,timeGridDay', // Align date to the middle
             },
-            events: events,
+            events: events.map((event) => {
+                return {
+                    ...event,
+                    color: getDepartmentColor(event.department)
+                };
+            }),
             customButtons: {
                 addTaskButton: {
                     text: 'Add Task',
@@ -233,6 +306,30 @@
                 }
             },
             initialView: 'dayGridMonth',  // Set the initial view of the calendar
+            editable: true, // Enable drag and drop functionality
+            eventDrop: function(info) {
+                // Function to handle event drag and drop
+                const taskId = info.event.id;
+                const newStart = info.event.start;
+                const newEnd = info.event.end;
+
+                // Send the updated task dates to the server
+                $.ajax({
+                    url: '/update_task_dates',
+                    type: 'POST',
+                    data: {
+                        id: taskId,
+                        start: newStart.toISOString().split('T')[0],
+                        end: newEnd.toISOString().split('T')[0],
+                    },
+                    success: function() {
+                        alert('Task dates updated successfully!');
+                    },
+                    error: function(xhr, textStatus, error) {
+                        alert('Failed to update task dates: ' + error);
+                    }
+                });
+            }
         });
 
         // Render the calendar
