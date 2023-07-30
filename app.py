@@ -8,7 +8,7 @@ from datetime import timedelta
 # Create a Flask web application
 app = Flask(__name__, static_url_path='/static')
 
-# Set the secret key for session management (replace 'your_secret_key_here' with a secret key)
+# Set the secret key for session management 
 app.config['SECRET_KEY'] = 'your_secret_key_here'
 
 # Configure the database URIs for user and task data
